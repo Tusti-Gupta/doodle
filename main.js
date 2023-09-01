@@ -11,4 +11,41 @@ console.log(sketch);
 document.getElementById("drawWhat").innerHTML = "Draw " + sketch;
 
 
+function preload() {
+}
 
+function setup() {
+    canvas = createCanvas(400, 400);
+    canvas.center();
+    background("white");
+}
+
+function updateCanvas() {
+    background("white");
+    randomNumber = Math.floor((Math.random()*doodleDataSet.length)+1);
+    sketch = doodleDataSet[randomNumber];
+    console.log(sketch);
+    document.getElementById("drawWhat").innerHTML = "Draw " + sketch;
+}
+
+function draw() {
+    runTimer();
+    if (guess == sketch) {
+        answerCheck = "correct";
+        score = score++;
+        document.getElementById("score").innerHTML = "SCORE : " + score;
+    }
+}
+
+function runTimer() {
+    timerCounter = timerCounter++;
+    document.getElementById("timer").innerHTML = "TIMER : " + timerCounter;
+    if (timerCounter == 400) {
+        timerCheck = "timeout";
+    }
+    if (timerCheck == "timeout" || answerCheck == "set") {
+        timerCheck = "";
+        answerCheck = "";
+        updateCanvas();
+    }
+}
