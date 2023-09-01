@@ -12,12 +12,32 @@ document.getElementById("drawWhat").innerHTML = "Draw " + sketch;
 
 
 function preload() {
+    classifier = ml5.imageClassifier("DoodleNet");
 }
 
 function setup() {
     canvas = createCanvas(400, 400);
     canvas.center();
     background("white");
+    canvas.mouseReleased(classifyCanvas);
+}
+
+function clearCanvas() {
+    background("white");
+}
+
+function classifyCanvas() {
+    classifier.classify(canvas, gotResult);
+}
+
+function gotResult(error, results){
+    if (error) {
+        console.error(error);
+    }
+    console.log(results);
+    guess = results[0].label;
+    document.getElementById("sketchGuess").innerHTML = "Are you drawing " + guess + " ?";
+    document.getElementById("sketchConfidence").innerHTML = "I am " + Math.round(results[0].confidence * 100) + "% confident";
 }
 
 function updateCanvas() {
@@ -29,23 +49,29 @@ function updateCanvas() {
 }
 
 function draw() {
-    runTimer();
     if (guess == sketch) {
         answerCheck = "correct";
-        score = score++;
+        score = score + 1;
         document.getElementById("score").innerHTML = "SCORE : " + score;
     }
+    strokeWeight(8);
+    stroke(0);
+    if (mouseIsPressed) {
+        line(pmouseX, pmouseY, mouseX, mouseY);
+    }
+    runTimer();
 }
 
 function runTimer() {
-    timerCounter = timerCounter++;
+    timerCounter = timerCounter + 1;
     document.getElementById("timer").innerHTML = "TIMER : " + timerCounter;
-    if (timerCounter == 400) {
+    if (timerCounter == 1000) {
         timerCheck = "timeout";
     }
-    if (timerCheck == "timeout" || answerCheck == "set") {
+    if (timerCheck == "timeout" || answerCheck == "correct") {
         timerCheck = "";
         answerCheck = "";
+        timerCounter = 0;
         updateCanvas();
     }
 }
