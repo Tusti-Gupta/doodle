@@ -1,62 +1,52 @@
-<!DOCTYPE html>
-
 <html>
-    <head>
-        <title> GOOGLE LENS vs MOBILE NET </title>
-        <link rel="stylesheet" href="style.css">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Syne+Mono" rel="stylesheet">
-    </head>
 
-    <body>
-        <center>
-            <br>
+<head>
+  <meta charset="UTF-8">
+  <title>Sketch Classification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather" rel="stylesheet">
+</head>
 
-            <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Logo_of_Google_Lens.svg/2560px-Logo_of_Google_Lens.png">
-            
-            <br><br><br>
-            
-            <label style="font-size: 50px;"> OR </label>
-            
-            <br>
-            
-            <img class="logo" src="https://assetstorev1-prd-cdn.unity3d.com/key-image/6cebeca9-9391-4dc6-9f9b-b7f742835e84.jpg">
+<body>
+  <center>
+<!-- Modal -->
+<div id="myModal" class="modal fade">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Sketches</h4>
+    </div>
 
-            <br><br>
+    <div class="modal-body">
+      <img src="sketch1.png">
+      <img src="sketch2.png">
+    </div>
 
-            <div id="results">
-                <br><br>
-                <img id="guessImg" height="400" width="300">
-                <br><br>
-                <label id="googleLensResults"> Google Lens says it's a </label>
-                <br>
-                <label id="mobileNetResults"> Mobile Net says it's a </label>
-                <br>
-                <label id="objectName" style="color: red !important;"> It is a </label>
-                <br>
-                <label id="testResult"> is more accurate </label>
-                <br><br>
-            </div>
-            <br><br><br><br>
+  </div>
+</div>
+</center>
 
-            <p> According to our study, google lens is more reliable for image identification.
-                <br><br>
-                However as far as I know, mobile net
-                can easily be co-ordinated in websites. It is available for free and does not require too complex code writing. Even so,
-                according to google, it is only 70% accurate. Based on our case study, only 1/5 results were correct which is 20% accuracy.
-                Hence, in business or other serious website development projects with economic investments, mobile net might not be a good 
-                option.
-                <br><br>
-                Google lens is not available for use in websites easily. The api is hard to use in code. It is available as Google Cloud 
-                Vision API. But this api is not free. But if someone is willing to invest some money, then google lens is the best option. 
-                It is super accurate because it uses google's dataset. Even in our study, it was 100% accurate.
-            </p>
+<span id="score" style="font-family: 'Roboto';"> SCORE : 0 </span>
+<span id="timer" style="font-family: 'Roboto';"> TIMER : 0 </span><br>
 
-        </center>
-        <script src="main.js"></script>
-    </body>
+<center>
+  <img height="100" width="300" src="logo.png"><br><br><br>
+<button style="font-family: 'Roboto';" class="btn" data-toggle="modal" data-target="#myModal">Show Sketch</button><br><br><br>
+<p1 id="sketchGuess"> Hmmm.. what are you gonna draw? </p1><br><br>
+<p1 id="sketchConfidence"> I am 0% confident</p1><br><br>
+<p1 id="drawWhat"> Draw something </p1><br><br>
+<button class="btn" onclick="clearCanvas()"> Clear </button>
+</center>
+
+<script src="main.js"></script>
+</body>
+
 </html>

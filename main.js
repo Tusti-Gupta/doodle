@@ -1,22 +1,77 @@
-imagesList = ["bottle.jpeg", "coffee.jpg", "teddy.jpg", "key.png", "test tube.jpeg", "dice.png"];
-objectsList = ["bottle", "coffee", "teddy", "key", "tube", "dice"];
-mobileNetPredictionList = ["bottle", "smiley face", "smiley face", "stitches", "line", "rain"];
-googleLensPredictionList = ["bottle", "coffee", "teddy", "key", "tube", "dice"];
+doodleDataSet = ["aircraft carrier","airplane","alarm clock","ambulance","angel","animal migration","ant","anvil","apple","arm","asparagus","axe","backpack","banana","bandage","barn","baseball","baseball bat","basket","basketball","bat","bathtub","beach","bear","beard","bed","bee","belt","bench","bicycle","binoculars","bird","birthday cake","blackberry","blueberry","book","boomerang","bottlecap","bowtie","bracelet","brain","bread","bridge","broccoli","broom","bucket","bulldozer","bus","bush","butterfly","cactus","cake","calculator","calendar","camel","camera","camouflage","campfire","candle","cannon","canoe","car","carrot","castle","cat","ceiling fan","cello","cell phone","chair","chandelier","church","circle","clarinet","clock","cloud","coffee cup","compass","computer","cookie","cooler","couch","cow","crab","crayon","crocodile","crown","cruise ship","cup","diamond","dishwasher","diving board","dog","dolphin","donut","door","dragon","dresser","drill","drums","duck","dumbbell","ear", "elbow","elephant","envelope","eraser","eye","eyeglasses","face","fan","feather","fence","finger","fire hydrant","fireplace","firetruck","fish","flamingo","flashlight","flip flops","floor lamp","flower","flying saucer","foot","fork","frog","frying pan","garden","garden hose","giraffe","goatee","golf club","grapes","grass","guitar","hamburger","hammer","hand","harp","hat","headphones","hedgehog","helicopter","helmet","hexagon","hockey puck","hockey stick","horse","hospital","hot air balloon","hot dog","hot tub","hourglass","house","house plant","hurricane","ice cream","jacket","jail","kangaroo","key","keyboard","knee","knife","ladder","lantern","laptop","leaf","leg","light bulb","lighter","lighthouse","lightning","line","lion","lipstick","lobster","lollipop","mailbox","map","marker","matches","megaphone","mermaid","microphone","microwave","monkey","moon","mosquito","motorbike","mountain","mouse","moustache","mouth","mug","mushroom","nail","necklace","nose","ocean","octagon","octopus","onion","oven","owl","paintbrush","paint can","palm tree","panda","pants","paper clip","parachute","parrot","passport","peanut","pear","peas","pencil","penguin","piano","pickup truck","picture frame","pig","pillow","pineapple","pizza","pliers","police car","pond","pool","popsicle","postcard","potato","power outlet","purse","rabbit","raccoon","radio","rain","rainbow","rake","remote control","rhinoceros","rifle","river","roller coaster","rollerskates","sailboat","sandwich","saw","saxophone","school bus","scissors","scorpion","screwdriver","sea turtle","see saw","shark","sheep","shoe","shorts","shovel","sink","skateboard","skull","skyscraper","sleeping bag","smiley face","snail","snake","snorkel","snowflake","snowman","soccer ball","sock","speedboat","spider","spoon","spreadsheet","square","squiggle","squirrel","stairs","star","steak","stereo","stethoscope","stitches","stop sign","stove","strawberry","streetlight","string bean","submarine","suitcase","sun","swan","sweater","swingset","sword","syringe","table","teapot","teddy-bear","telephone","television","tennis racquet","tent","The Eiffel Tower","The Great Wall of China","The Mona Lisa","tiger","toaster","toe","toilet","tooth","toothbrush","toothpaste","tornado","tractor","traffic light","train","tree","triangle","trombone","truck","trumpet","tshirt","umbrella","underwear","van","vase","violin","washing machine","watermelon","waterslide","whale","wheel","windmill","wine bottle","wine glass","wristwatch","yoga","zebra","zigzag"];
+randomNumber = Math.floor((Math.random()*doodleDataSet.length)+1);
+sketch = doodleDataSet[randomNumber];
+timerCounter = 0;
+timerCheck = "";
+guess = "";
+answerCheck = "";
+score = 0;
 
-randomNumber = Math.floor((Math.random()*imagesList.length));
-document.getElementById("objectName").innerHTML = "It is a " + objectsList[randomNumber];
-document.getElementById("guessImg").src = imagesList[randomNumber];
-document.getElementById("mobileNetResults").innerHTML = "Mobile Net says it's a " + mobileNetPredictionList[randomNumber];
-document.getElementById("googleLensResults").innerHTML = "Google Lens says it's a " + googleLensPredictionList[randomNumber];
-if ((googleLensPredictionList[randomNumber] == objectsList[randomNumber]) && (mobileNetPredictionList[randomNumber] !== objectsList[randomNumber])) {
-    document.getElementById("testResult").innerHTML = "Google Lens wins!";
-} else {
-    document.getElementById("testResult").innerHTML = "Its a tie!";
+console.log(sketch);
+document.getElementById("drawWhat").innerHTML = "Draw " + sketch;
+
+
+function preload() {
+    classifier = ml5.imageClassifier("DoodleNet");
 }
 
+function setup() {
+    canvas = createCanvas(400, 400);
+    canvas.center();
+    background("white");
+    canvas.mouseReleased(classifyCanvas);
+}
 
-randomColor = Math.floor(Math.random()*16777215).toString(16);
-document.getElementById("results").style.backgroundColor = "#" + randomColor;
+function clearCanvas() {
+    background("white");
+}
 
+function classifyCanvas() {
+    classifier.classify(canvas, gotResult);
+}
 
-console.log("Refresh to see a new study!");
+function gotResult(error, results){
+    if (error) {
+        console.error(error);
+    }
+    console.log(results);
+    guess = results[0].label;
+    document.getElementById("sketchGuess").innerHTML = "Are you drawing " + guess + " ?";
+    document.getElementById("sketchConfidence").innerHTML = "I am " + Math.round(results[0].confidence * 100) + "% confident";
+}
+
+function updateCanvas() {
+    background("white");
+    randomNumber = Math.floor((Math.random()*doodleDataSet.length)+1);
+    sketch = doodleDataSet[randomNumber];
+    console.log(sketch);
+    document.getElementById("drawWhat").innerHTML = "Draw " + sketch;
+}
+
+function draw() {
+    if (guess == sketch) {
+        answerCheck = "correct";
+        score = score + 1;
+        document.getElementById("score").innerHTML = "SCORE : " + score;
+    }
+    strokeWeight(8);
+    stroke(0);
+    if (mouseIsPressed) {
+        line(pmouseX, pmouseY, mouseX, mouseY);
+    }
+    runTimer();
+}
+
+function runTimer() {
+    timerCounter = timerCounter + 1;
+    document.getElementById("timer").innerHTML = "TIMER : " + timerCounter;
+    if (timerCounter == 1000) {
+        timerCheck = "timeout";
+    }
+    if (timerCheck == "timeout" || answerCheck == "correct") {
+        timerCheck = "";
+        answerCheck = "";
+        timerCounter = 0;
+        updateCanvas();
+    }
+}
